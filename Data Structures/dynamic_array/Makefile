@@ -25,7 +25,8 @@ else
 endif
 
 # Source files
-SRCS = main.c
+SRCS =	main.c \
+		darray.c
 
 # Object files
 OBJS = $(SRCS:.c=.o)
@@ -49,12 +50,13 @@ run: all
 
 clean:
 	@echo Cleaning object files...
-	-@$(RM) *.o
+	@$(RM) darray.o
+	@$(RM) main.o
 	@echo Clean complete!
 
 fclean: clean
 	@echo Removing executable...
-	-@$(RM) $(TARGET)
+	@$(RM) $(TARGET)
 	@echo Full clean complete!
 
 re: fclean all
