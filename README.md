@@ -7,12 +7,12 @@
 
 ### 학습 과목
 
-1. 자료구조 (Data Structures)
-2. 알고리즘 (Algorithms)
-3. 운영체제 (Operating Systems)
-4. 컴퓨터 네트워크 (Computer Networks)
-5. 데이터 베이스 (Database)
-6. 컴퓨터 구조 (Computer Architecture)
+0. 알고리즘 (Algorithms)
+1. 컴퓨터 구조 (Computer Architecture)
+2. 컴퓨터 네트워크 (Computer Networks)
+3. 자료구조 (Data Structures)
+4. 데이터 베이스 (Database)
+5. 운영체제 (Operating Systems)
 
 ---
 
