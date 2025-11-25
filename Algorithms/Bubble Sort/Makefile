@@ -15,11 +15,11 @@ endif
 
 # Target executable name and commands
 ifeq ($(DETECTED_OS),Windows)
-    TARGET = bubble-sort.exe
+    TARGET = bubble.exe
     RM = powershell -Command "Remove-Item -ErrorAction SilentlyContinue"
     RUN = .\$(TARGET)
 else
-    TARGET = bubble-sort
+    TARGET = bubble
     RM = rm -f
     RUN = ./$(TARGET)
 endif

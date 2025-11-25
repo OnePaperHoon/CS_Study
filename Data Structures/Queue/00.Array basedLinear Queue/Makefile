@@ -15,17 +15,18 @@ endif
 
 # Target executable name and commands
 ifeq ($(DETECTED_OS),Windows)
-    TARGET = algorithm.exe
+    TARGET = ArrayBaseQueue.exe
     RM = powershell -Command "Remove-Item -ErrorAction SilentlyContinue"
     RUN = .\$(TARGET)
 else
-    TARGET = algorithm
+    TARGET = ArrayBaseQueue
     RM = rm -f
     RUN = ./$(TARGET)
 endif
 
 # Source files
-SRCS = main.c
+SRCS =	main.c		\
+		ArrayBasedLinearQueue.c	
 
 # Object files
 OBJS = $(SRCS:.c=.o)
@@ -49,7 +50,8 @@ run: all
 
 clean:
 	@echo Cleaning object files...
-	-@$(RM) *.o
+	-@$(RM) main.o
+	-@$(RM) ArrayBasedLinearQueue.o
 	@echo Clean complete!
 
 fclean: clean
