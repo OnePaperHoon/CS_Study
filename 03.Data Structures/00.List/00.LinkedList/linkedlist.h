@@ -5,17 +5,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define SUCCESS 1
+#define FAILURE -1
+
 typedef struct Node {
 	int data;
 	struct Node* next;
 } Node;
 
 Node* createNode(int data);
-void appendNode(Node** head, int data);
-Node *findNode(Node* head, int index);
-void insertNodeAtTarget(Node** head, Node* target, int data);
+int appendNode(Node** head, int data);
+Node *findNode(Node* head, size_t index);
+int insertNodeAtTarget(Node** head, Node* target, int data);
 void printList(Node* head);
-void removeNode(Node** head, Node* target);
+int removeNode(Node** head, Node* target);
 void freeList(Node* head);
 void destroyList(Node** head);
 
