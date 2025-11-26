@@ -95,28 +95,38 @@ Node* findNode(Node* head, int index)
 */
 void insertNodeAtTarget(Node** head, Node* target, int data)
 {
+	// 유효성 검사
+	if (head == NULL || *head == NULL || target == NULL)
+		return;
+
+	// 새로운 노드 생성
 	Node* newNode = createNode(data);
 
+	// 메모리 할당 성공 여부 확인
 	if (!newNode)
 	{
 		printf("Memory allocation failed\n");
 		return;
 	}
 
+	// 리스트가 비어있는 경우
 	if (*head == NULL)
 	{
 		*head = newNode;
 		return;
 	}
 
+	// 타겟 노드를 찾아서 그 뒤에 새 노드 삽입
 	Node* temp = *head;
 
+	// 시간 복잡도 O(n)
 	while (temp != NULL)
 	{
+		// 타겟 노드 발견 시 삽입
 		if (temp == target)
 		{
-			newNode->next = temp->next;
-			temp->next = newNode;
+			newNode->next = temp->next; // 새 노드의 next를 타겟의 next로 설정
+			temp->next = newNode; // 타겟의 next를 새 노드로 설정
 			return;
 		}
 		temp = temp->next;
@@ -132,12 +142,16 @@ void printList(Node* head)
 	Node* temp = head;
 	int index = 0;
 
+	// 리스트를 순회하며 각 노드의 데이터 출력
+	// 시간 복잡도 O(n)
 	while (temp != NULL)
 	{
 		printf("[%d] : %d -> ", index, temp->data);
 		temp = temp->next;
 		index++;
 	}
+
+	// 리스트의 끝 표시
 	if (temp == NULL)
 		printf("NULL\n");
 }
@@ -180,8 +194,14 @@ void removeNode(Node** head, Node* target)
 */
 void freeList(Node* head)
 {
+	// 리스트가 비어있는 경우
+	if (head == NULL)
+		return;
+	
 	Node* temp = NULL;
 
+	// 리스트를 순회 하며 각 노드 해제
+	// 시간 복잡도 O(n)
 	while (head != NULL)
 	{
 		temp = head;
