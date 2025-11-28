@@ -1,4 +1,5 @@
 #include "doubleLinkedList.h"
+#include <stdio.h>
 
 
 /**
@@ -261,28 +262,222 @@ int removeNode(Node** head, size_t index)
     return SUCCESS;
 }
 
+/**
+ * @param Node** 헤드
+ * @param int 삭제할 노드의 데이터
+ * @return SUCCESS or FAILURE
+ */
 int removeNodeByData(Node** head, int data)
 {
-    // 1. 유효성 검사
+    // 1. 유효성 검사 - 리스트가 비어있는지 확인
     if (*head == NULL)
         return FAILURE;
 
-    // 2. 변수 선언
+    // 2. prevNode, currentNode, nextNode 변수 생성
+    // NULL로 초기화하는 것이 안전합니다
     Node* prevNode = NULL;
     Node* currentNode = NULL;
     Node* nextNode = NULL;
 
-    currentNode = *head;
+    // 3. 삭제할 노드를 데이터로 찾기
+    currentNode = findNodeByData(head, data);
 
-    while (currentNode)
-    {
-        if (currentNode->data == data)
-            break;
-        currentNode = currentNode->next;
-    }
-
+    // 4. 찾은 노드의 유효성 검사 - 데이터를 가진 노드가 없는지 확인
     if (currentNode == NULL)
         return FAILURE;
-    
-    
+
+    // 5. 삭제할 노드의 이전 노드와 다음 노드 저장
+    // currentNode->prev가 NULL이 아닐 때만 prevNode에 저장
+    // (머리 노드가 아닌 경우)
+    if (currentNode->prev)
+        prevNode = currentNode->prev;
+
+    // currentNode->next가 NULL이 아닐 때만 nextNode에 저장
+    // (꼬리 노드가 아닌 경우)
+    if (currentNode->next)
+        nextNode = currentNode->next;
+
+    // 6. 케이스별 처리 (if-else if 구조로 상호 배타적으로 처리)
+
+    // [케이스 1] 리스트에 노드가 하나만 있는 경우 (머리이자 꼬리)
+    //   - prevNode == NULL && nextNode == NULL
+    //   - *head를 NULL로 설정
+    if (prevNode == NULL && nextNode == NULL)
+    {
+        *head = NULL;
+    }
+    // [케이스 2] 머리 노드를 삭제하는 경우 (prevNode == NULL, nextNode 존재)
+    //   - *head를 nextNode로 변경
+    //   - nextNode->prev를 NULL로 설정
+    else if (prevNode == NULL)
+    {
+        *head = nextNode;
+        nextNode->prev = NULL;
+    }
+    // [케이스 3] 꼬리 노드를 삭제하는 경우 (nextNode == NULL, prevNode 존재)
+    //   - prevNode->next를 NULL로 설정
+    else if (nextNode == NULL)
+    {
+        prevNode->next = NULL;
+    }
+    // [케이스 4] 중간 노드를 삭제하는 경우 (prevNode와 nextNode 모두 존재)
+    //   - prevNode->next = nextNode
+    //   - nextNode->prev = prevNode
+    else
+    {
+        prevNode->next = nextNode;
+        nextNode->prev = prevNode;
+    }
+
+    // 7. 모든 케이스에서 currentNode는 free()로 메모리 해제
+    //    free(currentNode)는 currentNode가 가리키는 메모리만 해제하므로
+    //    prev나 next가 NULL이어도 문제없습니다
+    free(currentNode);
+
+    // 8. SUCCESS 리턴
+    return SUCCESS;
+}
+
+/**
+ * @param Node** 헤드
+ */
+void printList(Node** head)
+{
+    // 1. 유효성 검사 - 리스트가 비어있는지 확인
+    if (*head == NULL)
+    {
+        printf("List is empty.\n");
+        return;
+    }
+
+    // 2. temp 변수 생성
+    Node* temp = *head;
+
+    // 3. 리스트 순회하며 출력
+    printf("List: ");
+    while (temp != NULL)
+    {
+        printf("%d", temp->data);
+        if (temp->next != NULL)
+            printf(" <-> ");
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+/**
+ * @param Node** 헤드
+ */
+void printListRevers(Node** head)
+{
+    // 1. 유효성 검사 - 리스트가 비어있는지 확인
+    if (*head == NULL)
+    {
+        printf("List is empty.\n");
+        return;
+    }
+
+    // 2. 마지막 노드(tail)를 찾기
+    Node* tail = getTail(head);
+
+    // 3. tail부터 역방향으로 순회하며 출력
+    printf("List (Reverse): ");
+    while (tail != NULL)
+    {
+        printf("%d", tail->data);
+        if (tail->prev != NULL)
+            printf(" <-> ");
+        tail = tail->prev;
+    }
+    printf("\n");
+}
+
+/**
+ * @param Node** 헤드
+ * @return size_t 리스트의 크기
+ */
+size_t getListSize(Node** head)
+{
+    // 1. 유효성 검사 - 리스트가 비어있으면 0 반환
+    if (*head == NULL)
+        return 0;
+
+    // 2. 카운트 변수와 temp 변수 생성
+    size_t count = 0;
+    Node* temp = *head;
+
+    // 3. 리스트 순회하며 카운트
+    while (temp != NULL)
+    {
+        count++;
+        temp = temp->next;
+    }
+
+    // 4. 카운트 반환
+    return count;
+}
+
+/**
+ * @param Node** 헤드
+ * @return SUCCESS or FAILURE
+ */
+int destroyList(Node** head)
+{
+    // 1. 유효성 검사 - 리스트가 비어있으면 FAILURE 반환
+    if (*head == NULL)
+        return FAILURE;
+
+    // 2. temp 변수와 nextNode 변수 생성
+    Node* temp = *head;
+    Node* nextNode = NULL;
+
+    // 3. 리스트 순회하며 모든 노드 메모리 해제
+    while (temp != NULL)
+    {
+        // 다음 노드를 저장
+        nextNode = temp->next;
+
+        // 현재 노드 메모리 해제
+        free(temp);
+
+        // 다음 노드로 이동
+        temp = nextNode;
+    }
+
+    // 4. head를 NULL로 설정
+    *head = NULL;
+
+    // 5. SUCCESS 반환
+    return SUCCESS;
+}
+
+/**
+ * @param Node** 헤드
+ * @return 1(비어있음) or 0(비어있지 않음)
+ */
+int isEmpty(Node** head)
+{
+    // head가 NULL이면 1(true), 아니면 0(false) 반환
+    return (*head == NULL) ? 1 : 0;
+}
+
+/**
+ * @param Node** 헤드
+ * @return Node* 마지막 노드 또는 NULL(에러)
+ */
+Node* getTail(Node** head)
+{
+    // 1. 유효성 검사 - 리스트가 비어있으면 NULL 반환
+    if (*head == NULL)
+        return NULL;
+
+    // 2. temp 변수 생성
+    Node* temp = *head;
+
+    // 3. 마지막 노드까지 이동
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    // 4. 마지막 노드 반환
+    return temp;
 }

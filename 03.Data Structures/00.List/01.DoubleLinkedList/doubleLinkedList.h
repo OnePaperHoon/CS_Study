@@ -6,10 +6,6 @@
 
 #include <stdlib.h>
 
-// ❌ BUG: 전방 선언(forward declaration) 없이 Node 타입을 사용하고 있습니다!
-// 구조체 내부에서 Node* 타입을 사용하려면 먼저 struct Node를 선언해야 합니다
-// ✅ FIX: typedef struct Node로 변경하거나, 전방 선언을 추가해야 합니다
-
 typedef struct Node {
     int data;
     struct Node* prev;  // 구조체 내부에서는 struct Node* 사용
